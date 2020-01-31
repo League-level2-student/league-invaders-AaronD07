@@ -11,10 +11,12 @@ LeagueInvaders invaders = new LeagueInvaders();
 invaders.setup();
 
 
+
 }
 public LeagueInvaders() {
 	frame =new JFrame();
 	gamepanel=new GamePanel();
+	frame.addKeyListener(gamepanel);
 }
 public void setup() {
 	frame.add(gamepanel);
