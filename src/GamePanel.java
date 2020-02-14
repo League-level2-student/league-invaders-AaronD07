@@ -5,18 +5,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 public class GamePanel extends JPanel implements ActionListener, KeyListener{ 
 	Font titleFont;
 	Timer frameDraw;
+	public static BufferedImage image;
+	public static boolean needImage = true;
+	public static boolean gotImage = false;	
 	 final int MENU = 0;
 	 Rocketship ship = new Rocketship(250, 700, 50, 50, 10);
 	    final int GAME = 1;
+	    ObjectManager manager = new ObjectManager(ship);
 	    final int END = 2;
 	    int currentState = MENU;
 	    public GamePanel() {
+	    	if (needImage) {
+	    	    loadImage ("space.png");
+	    	}
 	    	  titleFont = new Font("Arial", Font.PLAIN, 48);
 	    	  frameDraw= new Timer(1000/60,this);
 	    	    frameDraw.start();
@@ -35,7 +44,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			
 		}
 		 void updateGameState() { 
-			 
+			 manager.update();
 		 }
 		 void updateEndState()  { 
 			 
@@ -56,10 +65,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			 g.drawString("Press START for instructions", 0, 600);
 		 }
 		 void drawGameState(Graphics g) {
-			 g.setColor(Color.BLACK);
-			 g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
-			 ship.draw(g);
+			 if (gotImage) {
+					g.drawImage(image, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
+					manager.draw(g);
+				} else {
+					g.setColor(Color.BLACK);
+					g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+				}
 		 }
+		 
 		 void drawEndState(Graphics g)  { 
 			 g.setColor(Color.RED);
 			 g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
@@ -76,6 +90,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			 g.setColor(Color.BLACK);
 			 g.drawString("Press ENTER to start", 0, 600);
 			 }
+		 void loadImage(String imageFile) {
+			    if (needImage) {
+			        try {
+			            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+				    gotImage = true;
+			        } catch (Exception e) {
+			            
+			        }
+			        needImage = false;
+			    }
+			}
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
