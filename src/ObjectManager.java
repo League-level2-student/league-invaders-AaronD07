@@ -1,10 +1,12 @@
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ObjectManager {
+public class ObjectManager implements ActionListener{
 	Rocketship rocket;
-	ArrayList<Projectile> projectile = new ArrayList<Projectile>();
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	ArrayList<Alien> aliens = new ArrayList<Alien>();
 	Random random = new Random();
 
@@ -14,6 +16,7 @@ public class ObjectManager {
 	}
 
 	public void addProjectile(Projectile projectile) {
+		projectiles.add(projectile);
 	}
 
 	public void addAlien() {
@@ -23,9 +26,15 @@ public class ObjectManager {
 	public void update() {
 		for (int i = 0; i < aliens.size(); i++) {
 			aliens.get(i).update();
+			
 			if (LeagueInvaders.HEIGHT < aliens.get(i).y) {
 				aliens.get(i).isActive = false;
 			}
+			
+		}
+		for(int i = 0; i<projectiles.size(); i++) {
+			projectiles.get(i).update();
+			
 		}
 
 	}
@@ -36,8 +45,8 @@ public class ObjectManager {
 			aliens.get(i).draw(g);
 		}
 
-		for (int t = 0; t < projectile.size(); t++) {
-			projectile.get(t).draw(g);
+		for (int t = 0; t < projectiles.size(); t++) {
+			projectiles.get(t).draw(g);
 		}
 	}
 
@@ -48,11 +57,34 @@ public class ObjectManager {
 			}
 		
 		}
-		for (int t = 0; t < projectile.size(); t++) {
-			if (projectile.get(t).isActive == false) {
-				projectile.remove(t);
+		for (int t = 0; t < projectiles.size(); t++) {
+			if (projectiles.get(t).isActive == false) {
+				projectiles.remove(t);
 			}
 		
 		}
 	}
-}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		addAlien();
+	}
+	public void checkCollision() {
+		for(int i=0; i<aliens.size(); i++) {
+			if (rocket.collisionBox.intersects(aliens.get(i).collisionBox)) {
+				rocket.isActive=false;
+			}
+		
+			for(int o=0; o<projectiles.size(); o++) {
+				if (aliens.get(i).collisionBox.intersects(projectiles.get(o).collisionBox)) {
+					aliens.get(i).isActive=false;
+				}
+			}
+		}
+				
+			}
+		
+	}
+	
+

@@ -16,6 +16,10 @@ public class Rocketship extends GameObject{
 		}
 		// TODO Auto-generated constructor stub
 	}
+	public void update() {
+	
+		 super.update();
+	}
 public void draw(Graphics g){
     g.setColor(Color.BLUE);
     g.fillRect(x, y, width, height);
@@ -50,5 +54,8 @@ void loadImage(String imageFile) {
         needImage = false;
     }
 }
+public Projectile getProjectile() {
+    return new Projectile(x+width/2, y, 10, 10);
+} 
 }
 
